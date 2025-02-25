@@ -10,13 +10,33 @@
     <h1>Tarihi Kentler Birliği Logo Editörü</h1>
     
     <div class="container">
-        <div class="controls">
+        <!-- Canvas Önizleme Alanı -->
+        <div class="preview-section">
+            <div class="canvas-container">
+                <canvas id="canvas" width="800" height="800"></canvas>
+            </div>
+            <p class="note">Önizleme: "PNG Olarak İndir" düğmesine tıklayarak görseli indirebilirsiniz.</p>
+        </div>
+        
+        <!-- İndirme Bölümü -->
+        <div class="download-section">
+            <div class="form-group">
+                <h3>İndirme</h3>
+                <button id="exportButton">PNG Olarak İndir</button>
+                <p class="note" style="margin-top: 10px;">Not: Logolar her zaman yüksek kalitede indirilir.</p>
+            </div>
+        </div>
+        
+        <!-- Yatay Düzenlenmiş Kontrol Bölümleri -->
+        <div class="controls-row">
+            <!-- Arka Plan -->
             <div class="form-group">
                 <h3>Arka Plan</h3>
                 <label for="backgroundColor">Arka Plan Rengi</label>
                 <input type="color" id="backgroundColor" value="#1D8C8C">
             </div>
             
+            <!-- Logo Ayarları -->
             <div class="form-group">
                 <h3>Logo Ayarları</h3>
                 <label for="logoUpload">Logo Yükle (PNG)</label>
@@ -36,6 +56,7 @@
                 <p class="note" style="margin-top: 5px;">Not: Logonun etrafındaki tüm kenarlık piksellerini agresif şekilde kaldırır</p>
             </div>
             
+            <!-- Yazı İçeriği -->
             <div class="form-group">
                 <h3>Yazı İçeriği</h3>
                 <label for="text">Yazı</label>
@@ -43,6 +64,7 @@
 Tarihi Kentler Birliği üyesidir.</textarea>
             </div>
             
+            <!-- Yazı Stilleri -->
             <div class="form-group">
                 <h3>Yazı Stilleri</h3>
                 <div class="text-options">
@@ -77,19 +99,6 @@ Tarihi Kentler Birliği üyesidir.</textarea>
                     </div>
                 </div>
             </div>
-            
-            <div class="form-group">
-                <h3>İndirme</h3>
-                <button id="exportButton">PNG Olarak İndir</button>
-                <p class="note" style="margin-top: 10px;">Not: Logolar her zaman yüksek kalitede indirilir.</p>
-            </div>
-        </div>
-        
-        <div class="preview">
-            <div class="canvas-container">
-                <canvas id="canvas" width="800" height="800"></canvas>
-            </div>
-            <p class="note">Önizleme: "PNG Olarak İndir" düğmesine tıklayarak görseli indirebilirsiniz.</p>
         </div>
     </div>
     

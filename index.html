@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarihi Kentler Birliği Logo Editörü</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: #f5f8fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #1a73e8;
+            padding: 15px 0;
+            border-bottom: 2px solid #e0e6ee;
+            font-size: 28px;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .controls {
+            flex: 1;
+            min-width: 320px;
+            max-width: 420px;
+        }
+        
+        .preview {
+            flex: 1;
+            min-width: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            background-color: #f7f9fd;
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid #e5ebf5;
+        }
+        
+        .form-group h3 {
+            margin-bottom: 12px;
+            color: #1a73e8;
+            font-size: 17px;
+            border-bottom: 1px solid #e5ebf5;
+            padding-bottom: 8px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #444;
+            font-size: 14px;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+        }
+        
+        input[type="color"] {
+            height: 42px;
+            cursor: pointer;
+        }
+        
+        textarea {
+            height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        button {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        
+        button:hover {
+            background-color: #1557b0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .canvas-container {
+            margin-bottom: 20px;
+            border: 2px solid #e0e6ee;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            width: 100%;
+            height: 450px;
+        }
+        
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+        
+        .note {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-top: 15px;
+            padding: 5px 10px;
+            background-color: #f7f9fd;
+            border-radius: 4px;
+            border: 1px solid #e5ebf5;
+        }
+        
+        .text-options {
+            background-color: #f7f9fd;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #e5ebf5;
+        }
+        
+        .text-options > div {
+            margin-bottom: 12px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 5px;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .slider-container input[type="range"] {
+            flex: 1;
+            height: 6px;
+        }
+        
+        .slider-container span {
+            min-width: 50px;
+            text-align: right;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+        
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .controls, .preview {
+                max-width: 100%;
+            }
+            
+            .canvas-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Tarihi Kentler Birliği Logo Editörü</h1>
+    
+    <div class="container">
+        <div class="controls">
+            <div class="form-group">
+                <h3>Arka Plan</h3>
+                <label for="backgroundColor">Arka Plan Rengi</label>
+                <input type="color" id="backgroundColor" value="#1D8C8C">
+            </div>
+            
+            <div class="form-group">
+                <h3>Logo Ayarları</h3>
+                <label for="logoUpload">Logo Yükle (PNG)</label>
+                <input type="file" id="logoUpload" accept="image/png">
+                <p class="note" style="margin-top: 8px;">Önerilen: Şeffaf arkaplanı olan PNG logo</p>
+                
+                <div class="slider-container" style="margin-top: 15px;">
+                    <label for="logoSize">Logo Boyutu:</label>
+                    <input type="range" id="logoSize" min="30" max="100" value="70" step="5">
+                    <span id="logoSizeValue">70%</span>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="smoothEdges" checked>
+                    <label for="smoothEdges">Tüm kenarlıkları temizle</label>
+                </div>
+                <p class="note" style="margin-top: 5px;">Not: Logonun etrafındaki tüm kenarlık piksellerini agresif şekilde kaldırır</p>
+            </div>
+            
+            <div class="form-group">
+                <h3>Yazı İçeriği</h3>
+                <label for="text">Yazı</label>
+                <textarea id="text" placeholder="Belediye adını yazınız">Muğla Büyükşehir Belediyesi
+Tarihi Kentler Birliği üyesidir.</textarea>
+            </div>
+            
+            <div class="form-group">
+                <h3>Yazı Stilleri</h3>
+                <div class="text-options">
+                    <div class="slider-container">
+                        <label for="fontSize">Yazı Boyutu:</label>
+                        <input type="range" id="fontSize" min="10" max="40" value="18" step="1">
+                        <span id="fontSizeValue">18px</span>
+                    </div>
+                    <div>
+                        <label for="fontColor">Yazı Rengi:</label>
+                        <input type="color" id="fontColor" value="#FFFFFF">
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="fontBold" checked>
+                        <label for="fontBold">Kalın</label>
+                        
+                        <input type="checkbox" id="fontItalic">
+                        <label for="fontItalic">İtalik</label>
+                    </div>
+                    <div>
+                        <label for="fontFamily">Yazı Tipi:</label>
+                        <select id="fontFamily">
+                            <option value="Arial">Arial</option>
+                            <option value="Verdana">Verdana</option>
+                            <option value="Helvetica">Helvetica</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Tahoma">Tahoma</option>
+                            <option value="Trebuchet MS">Trebuchet MS</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h3>İndirme</h3>
+                <button id="exportButton">PNG Olarak İndir</button>
+                <p class="note" style="margin-top: 10px;">Not: Logolar her zaman yüksek kalitede indirilir.</p>
+            </div>
+        </div>
+        
+        <div class="preview">
+            <div class="canvas-container">
+                <canvas id="canvas" width="800" height="800"></canvas>
+            </div>
+            <p class="note">Önizleme: "PNG Olarak İndir" düğmesine tıklayarak görseli indirebilirsiniz.</p>
+        </div>
+    </div>
+    
+    <script>
+        // DOM elementlerini seçme
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const backgroundColorInput = document.getElementById('backgroundColor');
+        const textInput = document.getElementById('text');
+        const exportButton = document.getElementById('exportButton');
+        const highQuality = document.getElementById('highQuality');
+        
+        // Logo kontrolü
+        const logoUpload = document.getElementById('logoUpload');
+        const logoSize = document.getElementById('logoSize');
+        const logoSizeValue = document.getElementById('logoSizeValue');
+        const smoothEdges = document.getElementById('smoothEdges');
+        
+        // Yazı stil kontrolleri
+        const fontSize = document.getElementById('fontSize');
+        const fontSizeValue = document.getElementById('fontSizeValue');
+        const fontColor = document.getElementById('fontColor');
+        const fontBold = document.getElementById('fontBold');
+        const fontItalic = document.getElementById('fontItalic');
+        const fontFamily = document.getElementById('fontFamily');
+        
+        // TKB logosu için görsel (placeholder olarak)
+        const logo = new Image();
+        logo.src = "/api/placeholder/400/400";
+        let customLogo = null;
+        
+        // Logo yükleme işlemi
+        logoUpload.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    customLogo = new Image();
+                    customLogo.onload = updateCanvas;
+                    customLogo.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Logo boyutu değişikliğini gösterme
+        logoSize.addEventListener('input', function() {
+            logoSizeValue.textContent = logoSize.value + '%';
+            updateCanvas();
+        });
+        
+        // Kenar düzleştirme seçeneği
+        smoothEdges.addEventListener('change', updateCanvas);
+        
+        // Yazı stili değişiklikleri
+        fontSize.addEventListener('input', function() {
+            fontSizeValue.textContent = fontSize.value + 'px';
+            updateCanvas();
+        });
+        
+        fontBold.addEventListener('change', updateCanvas);
+        fontItalic.addEventListener('change', updateCanvas);
+        fontFamily.addEventListener('change', updateCanvas);
+        fontColor.addEventListener('input', updateCanvas);
+        
+        // Event listener'lar
+        backgroundColorInput.addEventListener('input', updateCanvas);
+        textInput.addEventListener('input', updateCanvas);
+        
+        // Canvas'ı güncelleyen fonksiyon
+        function updateCanvas() {
+            const backgroundColor = backgroundColorInput.value;
+            const text = textInput.value;
+            
+            // Canvas'ı temizleme ve arka plan rengi
+            ctx.fillStyle = backgroundColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Özel logo veya varsayılan logo merkeze yerleştirme
+            const logoToUse = customLogo || logo;
+            if (logoToUse.complete) {
+                // Kullanıcı tarafından ayarlanan boyut oranı
+                const sizePercent = parseInt(logoSize.value) / 100;
+                
+                // Gerçek logo verilerini işlemek için geçici canvas kullan
+                const tempCanvas = document.createElement('canvas');
+                const tempCtx = tempCanvas.getContext('2d');
+                
+                // Oranı koruyarak boyutlandırma
+                let logoWidth, logoHeight;
+                const ratio = logoToUse.width / logoToUse.height;
+                
+                if (ratio > 1) {
+                    // Yatay logo
+                    logoWidth = canvas.width * 0.8 * sizePercent;
+                    logoHeight = logoWidth / ratio;
+                } else {
+                    // Dikey veya kare logo
+                    logoHeight = canvas.height * 0.4 * sizePercent;
+                    logoWidth = logoHeight * ratio;
+                }
+                
+// Kenar temizleme algoritmasını iyileştirme - updateCanvas fonksiyonu içindeki smoothEdges kısmı
+if (smoothEdges.checked) {
+    // PNG logolardaki tüm sınır piksellerini agresif şekilde temizleyen gelişmiş algoritma
+    
+    // Orijinal logoyu geçici canvas'a çiz
+    tempCanvas.width = logoToUse.width;
+    tempCanvas.height = logoToUse.height;
+    tempCtx.drawImage(logoToUse, 0, 0);
+
+    // Orijinal görüntüden piksel verilerini al
+    const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+    const data = imageData.data;
+    
+    const width = tempCanvas.width;
+    const height = tempCanvas.height;
+    
+    // Tüm piksellerdeki edge'leri bulmak için bir maske oluştur
+    const edgeMask = new Array(width * height).fill(false);
+    
+    // İlk aşama: Kenar pikselleri için genişletilmiş tespit
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const idx = (y * width + x) * 4;
+            const alpha = data[idx + 3];
+            
+            // Tamamen şeffaf pikselleri atla
+            if (alpha === 0) continue;
+            
+            // Piksel rengi
+            const r = data[idx];
+            const g = data[idx + 1];
+            const b = data[idx + 2];
+            
+            // Dış kenar kontrolü - logoların en dış kenarlarını tespit etmek için ek kontroller
+            const isEdgeOfImage = x < 10 || x > width - 10 || y < 10 || y > height - 10;
+            
+            // Herhangi bir şeffaf komşusu var mı bak - daha geniş bir alanda tara
+            let hasTransparentNeighbor = false;
+            const range = 10; // Çok daha geniş arama
+            
+            for (let ny = Math.max(0, y - range); ny <= Math.min(height - 1, y + range); ny++) {
+                for (let nx = Math.max(0, x - range); nx <= Math.min(width - 1, x + range); nx++) {
+                    // Kendisini kontrol etme
+                    if (nx === x && ny === y) continue;
+                    
+                    const nidx = (ny * width + nx) * 4;
+                    if (data[nidx + 3] === 0) {
+                        hasTransparentNeighbor = true;
+                        break;
+                    }
+                }
+                if (hasTransparentNeighbor) break;
+            }
+            
+            // Eğer şeffaf komşusu varsa veya görüntünün dış kenarına yakınsa
+            if (hasTransparentNeighbor || isEdgeOfImage) {
+                // Açık renkli veya düşük alpha değeri varsa, kenar pikseli olarak işaretle
+                if ((r > 70 || g > 70 || b > 70) || alpha < 250) {
+                    edgeMask[y * width + x] = true;
+                }
+                
+                // Beyaza yakın pikselleri tespit et (eşiği düşür)
+                if (r > 120 && g > 120 && b > 120) {
+                    edgeMask[y * width + x] = true;
+                }
+                
+                // Gri tonlu pikselleri daha geniş bir aralıkta tespit et
+                if (Math.abs(r - g) < 25 && Math.abs(r - b) < 25 && Math.abs(g - b) < 25 && r > 50) {
+                    edgeMask[y * width + x] = true;
+                }
+                
+                // Dış kenarlardaki pikseller için daha agresif temizleme
+                if (isEdgeOfImage && alpha < 255) {
+                    edgeMask[y * width + x] = true;
+                }
+            }
+        }
+    }
+    
+    // İkinci aşama: Tüm kenar piksellerini şeffaf yap
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            if (edgeMask[y * width + x]) {
+                const idx = (y * width + x) * 4;
+                // Bu bir kenar pikseli, tamamen şeffaf yap
+                data[idx + 3] = 0;
+            }
+        }
+    }
+    
+    // Üçüncü aşama: Yeni kenar piksellerinin oluşup oluşmadığını kontrol et ve onları da temizle
+    // Birkaç iterasyon yaparak daha agresif temizleme
+    for (let iteration = 0; iteration < 3; iteration++) {
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+                const idx = (y * width + x) * 4;
+                const alpha = data[idx + 3];
+                
+                // Tamamen şeffaf pikselleri atla
+                if (alpha === 0) continue;
+                
+                // Komşuların alpha değerlerinin ortalamasını hesapla
+                let transparentNeighbors = 0;
+                let totalNeighbors = 0;
+                
+                // Daha geniş bir komşuluk alanı tara
+                const neighborhood = 3;
+                for (let ny = Math.max(0, y - neighborhood); ny <= Math.min(height - 1, y + neighborhood); ny++) {
+                    for (let nx = Math.max(0, x - neighborhood); nx <= Math.min(width - 1, x + neighborhood); nx++) {
+                        if (nx === x && ny === y) continue;
+                        
+                        const nidx = (ny * width + nx) * 4;
+                        totalNeighbors++;
+                        
+                        if (data[nidx + 3] === 0) {
+                            transparentNeighbors++;
+                        }
+                    }
+                }
+                
+                // Şeffaf komşu oranı
+                const transparentRatio = transparentNeighbors / totalNeighbors;
+                
+                // Dış kenar kontrolü
+                const isEdgeOfImage = x < 15 || x > width - 15 || y < 15 || y > height - 15;
+                
+                // Piksel rengi
+                const r = data[idx];
+                const g = data[idx + 1];
+                const b = data[idx + 2];
+                
+                // Eğer komşularının belirli bir kısmı şeffafsa veya dış kenara yakınsa
+                if (transparentRatio > 0.2 || isEdgeOfImage) {
+                    // Açık renkli (özellikle beyaza veya griye yakın) pikselleri temizle
+                    if ((r > 100 && g > 100 && b > 100) || alpha < 240) {
+                        data[idx + 3] = 0;
+                    }
+                    
+                    // Dış kenarlardaki tüm hafif yarı-şeffaf pikselleri temizle
+                    if (isEdgeOfImage && alpha < 250) {
+                        data[idx + 3] = 0;
+                    }
+                }
+            }
+        }
+    }
+    
+    // Dördüncü aşama: Logo kenarlarında kalan izole noktaları temizle
+    // Tüm pikseller için izolasyon testi
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const idx = (y * width + x) * 4;
+            
+            // Şeffaf pikselleri atla
+            if (data[idx + 3] === 0) continue;
+            
+            // Geniş bir alan içinde, bu pikselin izole olup olmadığını kontrol et
+            let opaqueNeighbors = 0;
+            let totalChecked = 0;
+            
+            const isolationRange = 5;
+            for (let ny = Math.max(0, y - isolationRange); ny <= Math.min(height - 1, y + isolationRange); ny++) {
+                for (let nx = Math.max(0, x - isolationRange); nx <= Math.min(width - 1, x + isolationRange); nx++) {
+                    // Kendisini saymıyoruz
+                    if (nx === x && ny === y) continue;
+                    
+                    // Fazla uzak pikselleri kontrol etme (dairesel alan)
+                    const distance = Math.sqrt(Math.pow(nx - x, 2) + Math.pow(ny - y, 2));
+                    if (distance > isolationRange) continue;
+                    
+                    const nidx = (ny * width + nx) * 4;
+                    if (data[nidx + 3] > 0) {
+                        opaqueNeighbors++;
+                    }
+                    totalChecked++;
+                }
+            }
+            
+            // Eğer çok az sayıda opak komşu varsa, bu izole bir pikseldir
+            if (opaqueNeighbors / totalChecked < 0.2) {
+                data[idx + 3] = 0; // İzole pikseli temizle
+            }
+        }
+    }
+    
+    // Değiştirilmiş görüntüyü geri yaz
+    tempCtx.putImageData(imageData, 0, 0);
+    
+    // Şimdi final canvas'ı hazırla
+    const finalCanvas = document.createElement('canvas');
+    finalCanvas.width = logoWidth;
+    finalCanvas.height = logoHeight;
+    const finalCtx = finalCanvas.getContext('2d');
+    
+    // Ölçeklendirme yaparken kenarları yumuşatma (anti-aliasing) kullanma
+    finalCtx.imageSmoothingEnabled = false;
+    
+    // İşlenmiş logoyu son boyuta getir
+    finalCtx.drawImage(tempCanvas, 0, 0, finalCanvas.width, finalCanvas.height);
+    
+    // Merkeze yerleştirme
+    const logoX = (canvas.width - logoWidth) / 2;
+    const logoY = (canvas.height - logoHeight) / 3;
+    
+    // İşlenmiş logoyu ana canvas'a çiz
+    ctx.drawImage(finalCanvas, logoX, logoY);
+} else {
+                    // Normal çizim (kenar yumuşatma olmadan)
+                    const logoX = (canvas.width - logoWidth) / 2;
+                    const logoY = (canvas.height - logoHeight) / 3;
+                    ctx.drawImage(logoToUse, logoX, logoY, logoWidth, logoHeight);
+                }
+            }
+            
+            // Text çizimi
+            ctx.fillStyle = fontColor.value; // Yazı rengini kullanıcının seçtiği renge ayarla
+            
+            // Yazı stili ayarları
+            const fontSizeValue = (fontSize.value * 2) + 'px'; // Canvas boyutuna göre font boyutunu 2 kat büyüttüm
+            const fontBoldValue = fontBold.checked ? 'bold ' : '';
+            const fontItalicValue = fontItalic.checked ? 'italic ' : '';
+            const fontFamilyValue = fontFamily.value;
+            
+            ctx.font = `${fontBoldValue}${fontItalicValue}${fontSizeValue} ${fontFamilyValue}`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Çoklu satır text
+            const lines = text.split('\n');
+            let y = canvas.height * 0.65; // Metnin başlangıç Y pozisyonu
+            
+            lines.forEach(line => {
+                ctx.fillText(line, canvas.width / 2, y);
+                y += parseInt(fontSize.value) * 2.5; // Satır aralığı, font boyutuna bağlı olarak ayarlanır
+            });
+        }
+        
+        // Logo yüklendiğinde canvas'ı güncelle
+        logo.onload = updateCanvas;
+        
+        // Sayfa yüklendiğinde canvas'ı ilk kez çiz
+        window.addEventListener('load', updateCanvas);
+        
+        // PNG olarak indirme fonksiyonu
+        exportButton.addEventListener('click', function() {
+            // Her zaman yüksek kalite için büyük bir canvas oluştur
+            const exportCanvas = document.createElement('canvas');
+            const exportWidth = 1600;
+            const exportHeight = 1600;
+            
+            exportCanvas.width = exportWidth;
+            exportCanvas.height = exportHeight;
+            const exportCtx = exportCanvas.getContext('2d');
+            
+            // Arka plan rengini ayarla
+            exportCtx.fillStyle = backgroundColorInput.value;
+            exportCtx.fillRect(0, 0, exportWidth, exportHeight);
+            
+            // Logoyu yükle
+            const logoToUse = customLogo || logo;
+            
+            // Logo boyutu oranını hesapla
+            const sizePercent = parseInt(logoSize.value) / 100;
+            
+            // Oranı koruyarak boyutlandırma
+            let logoWidth, logoHeight;
+            const ratio = logoToUse.width / logoToUse.height;
+            
+            if (ratio > 1) {
+                // Yatay logo
+                logoWidth = exportWidth * 0.8 * sizePercent;
+                logoHeight = logoWidth / ratio;
+            } else {
+                // Dikey veya kare logo
+                logoHeight = exportHeight * 0.4 * sizePercent;
+                logoWidth = logoHeight * ratio;
+            }
+            
+            // Logo işleme
+            if (smoothEdges.checked) {
+                // PNG logolardaki tüm sınır piksellerini agresif şekilde temizleyen gelişmiş algoritma (export versiyonu)
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = logoToUse.width;
+                tempCanvas.height = logoToUse.height;
+                const tempCtx = tempCanvas.getContext('2d');
+                
+                // Orijinal logoyu geçici canvas'a çiz
+                tempCtx.drawImage(logoToUse, 0, 0);
+                
+                // Orijinal görüntüden piksel verilerini al
+                const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                const data = imageData.data;
+                
+                const width = tempCanvas.width;
+                const height = tempCanvas.height;
+                
+                // Tüm piksellerdeki edge'leri bulmak için bir maske oluştur
+                const edgeMask = new Array(width * height).fill(false);
+                
+                // İlk aşama: Tüm olası sınır piksellerini tespit et
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        const idx = (y * width + x) * 4;
+                        const alpha = data[idx + 3];
+                        
+                        // Tamamen şeffaf pikselleri atla
+                        if (alpha === 0) continue;
+                        
+                        const r = data[idx];
+                        const g = data[idx + 1];
+                        const b = data[idx + 2];
+                        
+                        // Herhangi bir şeffaf komşusu var mı bak
+                        let hasTransparentNeighbor = false;
+                        
+                        const range = 5; // Daha da geniş arama
+                        for (let ny = Math.max(0, y - range); ny <= Math.min(height - 1, y + range); ny++) {
+                            for (let nx = Math.max(0, x - range); nx <= Math.min(width - 1, x + range); nx++) {
+                                const dist = Math.sqrt(Math.pow(nx - x, 2) + Math.pow(ny - y, 2));
+                                if (dist > range) continue; // Dairesel arama alanı
+                                
+                                const nidx = (ny * width + nx) * 4;
+                                if (data[nidx + 3] === 0) {
+                                    hasTransparentNeighbor = true;
+                                    break;
+                                }
+                            }
+                            if (hasTransparentNeighbor) break;
+                        }
+                        
+                        // Çok daha agresif sınır piksel tespiti
+                        if (hasTransparentNeighbor) {
+                            // Renk kriterini genişlet - açık renkli veya çok koyu renkli olmayan herhangi bir piksel
+                            if ((r > 80 || g > 80 || b > 80) || alpha < 250) {
+                                edgeMask[y * width + x] = true;
+                            }
+                            
+                            // Beyaza veya griye yakın herhangi bir piksel
+                            if ((r > 100 && g > 100 && b > 100) || 
+                                (Math.abs(r - g) < 30 && Math.abs(r - b) < 30 && Math.abs(g - b) < 30)) {
+                                edgeMask[y * width + x] = true;
+                            }
+                        }
+                    }
+                }
+                
+                // İkinci aşama: Tüm kenar piksellerini şeffaf yap
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        if (edgeMask[y * width + x]) {
+                            const idx = (y * width + x) * 4;
+                            // Bu bir kenar pikseli, tamamen şeffaf yap
+                            data[idx + 3] = 0;
+                        }
+                    }
+                }
+                
+                // Üçüncü aşama: Yeni oluşan sınırları da temizle (birkaç tekrarlama)
+                for (let iteration = 0; iteration < 6; iteration++) {
+                    // Son işlemeden sonra yeni kenarları tespit et
+                    for (let y = 0; y < height; y++) {
+                        for (let x = 0; x < width; x++) {
+                            const idx = (y * width + x) * 4;
+                            const alpha = data[idx + 3];
+                            
+                            // Tamamen şeffaf pikselleri atla
+                            if (alpha === 0) continue;
+                            
+                            // Şeffaf komşusu var mı kontrol et
+                            let transparentNeighborCount = 0;
+                            
+                            for (let ny = Math.max(0, y - 2); ny <= Math.min(height - 1, y + 2); ny++) {
+                                for (let nx = Math.max(0, x - 2); nx <= Math.min(width - 1, x + 2); nx++) {
+                                    const nidx = (ny * width + nx) * 4;
+                                    if (data[nidx + 3] === 0) {
+                                        transparentNeighborCount++;
+                                    }
+                                }
+                            }
+                            
+                            // Eğer çok sayıda şeffaf komşu varsa ve piksel açık renkliyse
+                            if (transparentNeighborCount > 2) {
+                                const r = data[idx];
+                                const g = data[idx + 1];
+                                const b = data[idx + 2];
+                                
+                                // Açık renkli (beyaz/gri) piksel
+                                if ((r > 80 && g > 80 && b > 80)) {
+                                    data[idx + 3] = 0; // Şeffaf yap
+                                }
+                                
+                                // Herhangi bir düşük alpha değeri
+                                if (alpha < 230) {
+                                    data[idx + 3] = 0;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Değiştirilmiş görüntüyü geri yaz
+                tempCtx.putImageData(imageData, 0, 0);
+                
+                // Şimdi final canvas'ı hazırla
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = logoWidth;
+                finalCanvas.height = logoHeight;
+                const finalCtx = finalCanvas.getContext('2d');
+                
+                // Ölçeklendirme yaparken kenarları yumuşatma (anti-aliasing) kullanma
+                finalCtx.imageSmoothingEnabled = false;
+                
+                // İşlenmiş logoyu son boyuta getir
+                finalCtx.drawImage(tempCanvas, 0, 0, finalCanvas.width, finalCanvas.height);
+                
+                const logoX = (exportWidth - logoWidth) / 2;
+                const logoY = (exportHeight - logoHeight) / 3;
+                
+                exportCtx.drawImage(finalCanvas, logoX, logoY);
+            } else {
+                const logoX = (exportWidth - logoWidth) / 2;
+                const logoY = (exportHeight - logoHeight) / 3;
+                exportCtx.drawImage(logoToUse, logoX, logoY, logoWidth, logoHeight);
+            }
+            
+            // Text çizimi
+            exportCtx.fillStyle = fontColor.value;
+            
+            // Yazı stili ayarları - export canvas boyutuna uyarlanmış
+            const scaleFactor = exportWidth / canvas.width;
+            const exportFontSizeValue = (parseInt(fontSize.value) * scaleFactor * 2) + 'px';
+            const fontBoldValue = fontBold.checked ? 'bold ' : '';
+            const fontItalicValue = fontItalic.checked ? 'italic ' : '';
+            const fontFamilyValue = fontFamily.value;
+            
+            exportCtx.font = `${fontBoldValue}${fontItalicValue}${exportFontSizeValue} ${fontFamilyValue}`;
+            exportCtx.textAlign = 'center';
+            exportCtx.textBaseline = 'middle';
+            
+            // Çoklu satır text
+            const lines = textInput.value.split('\n');
+            let y = exportHeight * 0.65; // Metnin başlangıç Y pozisyonu
+            
+            lines.forEach(line => {
+                exportCtx.fillText(line, exportWidth / 2, y);
+                y += parseInt(fontSize.value) * scaleFactor * 2.5; // Satır aralığı, font boyutuyla orantılı
+            });
+            
+            // Yüksek kalitede PNG olarak indir
+            const image = exportCanvas.toDataURL('image/png');
+            
+            const link = document.createElement('a');
+            link.href = image;
+            
+            // Dosya adını belediye adından al
+            const fileName = 'tarihi-kentler-birligi-' + 
+                textInput.value.split('\n')[0]
+                    .substring(0, 15)
+                    .replace(/\s+/g, '-')
+                    .toLowerCase() + 
+                '.png';
+                
+            link.download = fileName;
+            link.click();
+        });
+    </script>
+</body>
+</html>
